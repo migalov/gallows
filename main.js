@@ -1,12 +1,15 @@
 /* HTML-теги */
 const template = document.querySelector("#empty-cell");
 
+
+
 /* Счетчики игры */
 let statusGame = {
   countFalis: 0,
   maxCountFalis: 7,
   countGuessLetter: 0,
-  randomWord: "Some"
+  question: "",
+  randomWord: "Something"
 }
 
 /* Проверка состояния игры */
@@ -34,6 +37,7 @@ const generateGame = (windowClass, word, cellsClass) => {
         cell.dataset.index = i;
 
         document.querySelector(windowClass).appendChild(cell);
+        document.querySelector(windowClass).style = `grid-template-columns: repeat(${word.length}, 1fr)`
 
   }
 }
@@ -46,20 +50,32 @@ const checkAndInsertLetter = (word, selector) => {
         _e.target.value = _e.key;
         _e.target.disabled = true;
         statusGame.countGuessLetter = statusGame.countGuessLetter + 1;
+        console.log("Yes");
       }
       else {
         _e.preventDefault();
         statusGame.countFalis = statusGame.countFalis + 1;
+        console.log("No");
+        _e.target.classList.add("gallows-cell--error");
+        setTimeout(() => {
+          _e.target.classList.remove("gallows-cell--error");
+        }, 500)
       }
       checkStateGame();
     });
+    el.addEventListener("rezise", (_e) => {
+      console.log(_e.target.outerWidth);
+    })
 
   });
 }
 
 const initGame = (windowClass, cellsClass, word) => {
-  generateGame(windowClass, word, cellsClass);
-  checkAndInsertLetter(word, cellsClass);
+//   let username = prompt("Hi! Let's game to Gallows. What it's your name?");
+//   let start = confirm(`Nice to meet you${username ? ", "+username : ""}! Nice to meet you, Misha. The rules of the game are simple. You must guess the word. You have 7 tries. If you spend all attempts before you give up the word, you lose.
+// Good luck.`);
+    generateGame(windowClass, word, cellsClass);
+    checkAndInsertLetter(word, cellsClass);
 }
 
-initGame('.gallows', '.gallows-cell', statusGame.randomWord);
+initGame('.gallows-group-inner', '.gallows-cell', statusGame.randomWord);
